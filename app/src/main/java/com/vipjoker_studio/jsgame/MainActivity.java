@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.http.SslError;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -92,7 +95,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.requestFocus(View.FOCUS_DOWN);
         // load the main.html file that kept in assets folder
-        webView.loadUrl("file:///android_asset/index.html");
+
+
+        webView.loadDataWithBaseURL("file:///android_asset/","<!DOCTYPE html>\n" +
+                "\n" +
+                "<html>\n" +
+                "\n" +
+                "<head>\n" +
+                "\n" +
+                "\n" +
+                "</head>\n" +
+                "\n" +
+                "<body>\n" +
+                "<img src=\"mario.png\" alt=\"Mario\"></img>\n" +
+                "<input type=\"button\" onClick=\"callTojavaFn()\" value=\"Call Java Fn\">\n" +
+                "<input type=\"button\" onClick=\"callMy()\" value=\"Console\"/>\n" +
+                "</body>\n" +
+                "<script src=\"js/pixi.min.js\"></script>\n" +
+                "<script language=\"javascript\" src=\"js/main.js\"></script>\n" +
+                "</html>\n","text/html", "UTF-8", null);
+
+//        webView.loadUrl("file:///android_asset/index.html");
 
     }
 
@@ -102,6 +125,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnCallJs:
+
+                try {
+                    for (String s : getAssets().list("assets/")) {
+                        Log.i("Assets", "onClick: " + s);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
                 jsHandler.javaFnCall("Hey, Im calling from Android-Java");
                 break;
 
